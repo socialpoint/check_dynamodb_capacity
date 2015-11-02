@@ -143,24 +143,29 @@ def main():
                                                unit='Count',
                                                )
 
-    if len(result_provisioned) == 0 or len(result_consumed) == 0:
+    if len(result_provisioned) == 0:
         status = 'UNKNOWN'
         print(status + ': Could not get table capacities. Is the table name '
               'correct?')
         sys.exit(NAGIOS_STATUSES[status])
 
-    values_consumed = []
     values_provisioned = []
-    for n in result_consumed:
-        values_consumed.append({'consumed': n['Sum']/args.period,
-                                'date': n['Timestamp']})
-
     for n in result_provisioned:
         values_provisioned.append({'provisioned': n['Sum'],
                                    'date': n['Timestamp']})
-
-    df_consumed = pd.DataFrame(values_consumed).set_index('date')
     df_provisioned = pd.DataFrame(values_provisioned).set_index('date')
+
+    values_consumed = []
+    for n in result_consumed:
+        values_consumed.append({'consumed': n['Sum']/args.period,
+                                'date': n['Timestamp']})
+    else:
+        values_consumed.append({'consumed': 0,
+                                'date': df_provisioned.head(1).index[0]})
+        values_consumed.append({'consumed': 0,
+                                'date': df_provisioned.tail(1).index[0]})
+    df_consumed = pd.DataFrame(values_consumed).set_index('date')
+
     df = pd.concat([df_consumed, df_provisioned], axis=1, join='outer')
 
     first_date = df.sort_index(0).index[0]
