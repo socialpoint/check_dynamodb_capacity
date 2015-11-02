@@ -159,7 +159,7 @@ def main():
     for n in result_consumed:
         values_consumed.append({'consumed': n['Sum']/args.period,
                                 'date': n['Timestamp']})
-    else:
+    if len(result_consumed) == 0:
         values_consumed.append({'consumed': 0,
                                 'date': df_provisioned.head(1).index[0]})
         values_consumed.append({'consumed': 0,
