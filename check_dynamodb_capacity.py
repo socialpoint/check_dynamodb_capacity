@@ -235,7 +235,7 @@ def main():
 
     if '%' in args.critical.split(':')[1]:
         # second argument value is percentage
-        if (float(len_w) / float(total_datapoints) * 100) > critical_1:
+        if (float(len_c) / float(total_datapoints) * 100) > critical_1:
             status = 'CRITICAL'
             datapoints_exceeded = len_c
             threshold = args.critical.split(':')[0]
