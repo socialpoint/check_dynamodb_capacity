@@ -91,9 +91,6 @@ def main():
     if args.capacity not in CAPACITY_METRIC.keys():
         argp.error('Capacity not valid')
 
-    if args.period < 60 or args.period % 60 != 0:
-        argp.error('Period must be at least 60 seconds and multiple of 60.')
-
     if args.capacity in ['read_index', 'write_index']:
         if not args.index:
             argp.error('If capacity is read_index or write_index, an index'
